@@ -1,0 +1,126 @@
+---
+title: "Biostat 200C Homework 1"
+subtitle: Due Apr 11 @ 11:59PM
+date: today
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+engine: knitr
+knitr:
+  opts_chunk: 
+    fig.align: 'center'
+    # fig.width: 6
+    # fig.height: 4
+    message: FALSE
+    cache: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+```
+
+To submit homework, please submit Rmd and html files to bruinlearn by the deadline.
+
+
+## Q1. Reivew of linear models (60pts)
+The swiss data — use Fertility as the response to practice
+### Q1.1
+
+An initial data analysis that explores the numerical and graphical characteristics of the data.(5pts)
+
+### Q1.2
+
+Variable selection to choose the best model. (10pts)
+
+### Q1.3
+
+An exploration of transformations to improve the fit of the model. (10pts)
+
+### Q1.4
+Diagnostics to check the assumptions of your model. (10pts)
+
+### Q1.5
+Some predictions of future observations for interesting values of the predictors.(5pts)
+
+### Q1.6
+An interpretation of the meaning of the model by writing a scientific abstract. (<150 words) (10pts)
+
+  + BACKGROUND: brief intro of the study background, what are the existing findings
+  
+  + OBJECTIVE: state the overall purpose of your research, e.g., what kind of knowledge gap you are trying to fill in
+  
+  + METHODS: study design (how these data were collected), outcome definitions, statistical procedures used
+  
+  + RESULTS: summary of major findings to address the question raised in objective
+  
+  + CONCLUSIONS:
+
+
+## Q2.(70pts)  
+
+The National Institute of Diabetes and Digestive and Kidney Diseases conducted a study on 768 adult female Pima Indians living near Phoenix. The purpose of the study was to investigate factors related to diabetes. The data may be found in the the dataset `pima`.
+
+### Q2.1 
+
+Create a factor version of the test results and use this to produce an interleaved histogram to show how the distribution of insulin differs between those testing positive and negative. Do you notice anything unbelievable about the plot? (5pts)
+
+
+### Q2.2
+
+Replace the zero values of `insulin` with the missing value code `NA`. Recreatethe interleaved histogram plot and comment on the distribution. (5pts)
+
+### Q2.3
+
+Replace the incredible zeroes in other variables with the missing value code. Fit a model with the result of the diabetes test as the response and all the other variables as predictors. How many observations were used in the model fitting? Why is this less than the number of observations in the data frame. (10pts)
+
+### Q2.4
+
+Refit the model but now without the insulin and triceps predictors. How many observations were used in fitting this model? Devise a test to compare this model with that in the previous question. (10pts)
+
+### Q2.5
+
+Use AIC to select a model. You will need to take account of the missing values. Which predictors are selected? How many cases are used in your selected model? (10pts)
+
+### Q2.6
+
+Create a variable that indicates whether the case contains a missing value. Use this variable as a predictor of the test result. Is missingness associated with the test result? Refit the selected model, but now using as much of the data as reasonable. Explain why it is appropriate to do this. (10pts)
+
+```{r}
+library(faraway)
+library(tidyverse)
+
+pima <- pima %>% 
+  mutate(
+    glucose2  = ifelse(glucose == 0, NA, glucose),
+    diastolic2 = ifelse(diastolic == 0, NA, diastolic),
+    triceps2 = ifelse(triceps == 0, NA, triceps),
+    insulin2 = ifelse(insulin == 0, NA, insulin),
+    bmi2 = ifelse(bmi == 0, NA, bmi), 
+    diabetes2 = ifelse(diabetes == 0, NA, diabetes),
+    age2 = ifelse(age == 0, NA, age))
+
+pima$missingNA = ifelse(apply(is.na(dplyr::select(pima, contains("2"))), 1, sum) > 0, 1, 0)
+
+missing.glm <- glm(test ~ missingNA, family = binomial(), data = pima)
+
+library(gtsummary)
+missing.glm %>%
+  tbl_regression() %>%
+  bold_labels() %>%
+  bold_p(t = 0.05)
+```
+From above regression, we found missingness was not associate with outcome. This means that the distribution of outcome when removing data with missing is still a representative of the original distribution. This justifies the use of "complete case" analysis. 
+
+### Q2.7 
+
+Using the last fitted model of the previous question, compute the odds ratio of testing positive for diabetes for a woman with a BMI at the first quartile compared with a woman at the third quartile, assuming that all other factors are held constant? Give a confidence interval for this odds ratio.(10pts)
+
+### Q2.8 
+
+Do women who test positive have higher diastolic blood pressures? Is the diastolic blood pressure significant in the regression model? Explain the distinction between the two questions and discuss why the answers are only apparently contradictory. (10pts)
