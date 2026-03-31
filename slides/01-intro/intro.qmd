@@ -39,8 +39,13 @@ knitr:
 #### 2021 - Present
 - Research principal investigator, Phoenix VA Health Care System
 - Research principal investigator, Greater Los Angeles VA Health Care System
-- Associate Professor-in-Residence of Biostatistics, UCLA
+- Professor-in-Residence of Biostatistics, UCLA
   + Department of Biostatistics 
+  
+### TA
+
+- Zian Zhuang
+- Email: <zianzhuang@ucla.edu>
 
 ### You?
 
