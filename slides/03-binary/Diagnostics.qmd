@@ -1,0 +1,310 @@
+---
+title: "Diagnostic of Logistic Regression"
+date: today
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: false
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+engine: knitr
+knitr:
+  opts_chunk: 
+    fig.align: 'center'
+    # fig.width: 6
+    # fig.height: 4
+    message: FALSE
+    cache: false
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+library(knitr)
+library(ggplot2)
+library(tidyverse)
+```
+
+## Logistic Regression with a Quadratic Term
+
+Suppose the linear predictor in a logistic regression model has the following form:
+
+$$
+\eta = \beta_0 + \beta_1 x_1^2 + \beta_2 x_2
+$$
+We set $\beta_0 = 1$, $\beta_1 = 3$, and $\beta_2 = 5$. We generate a dataset with $n = 1000$ observations from this model, where $x_1$ and $x_2$ are independent standard normal random variables. The response variable $y$ is generated from a Bernoulli distribution with parameter $p_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}}$. There is no noise added to the linear predictor.
+
+```{r}
+#| eval: TRUE
+
+### Generate data
+
+## Set seed
+set.seed(1017)
+
+## Set parameters
+n_1 <- 1000
+beta_0 <- -1
+beta_1 <- 3
+beta_2 <- 5
+
+## Generate data
+x_1 <- rnorm(n_1)
+x_2 <- rnorm(n_1)
+
+eta <- beta_0 + beta_1 * x_1^2 + beta_2 * x_2
+
+p <- exp(eta) / (1 + exp(eta))
+
+y <- rbinom(n_1, 1, p)
+```
+
+### Binned deviance residuals against linear predictor $X_1$ assuming the true model is linear
+
+Now we fit a logistic regression model to this dataset, but we assume that the true model is linear, i.e., $\eta = \beta_0 + \beta_1 x_1 + \beta_2 x_2$. We fit the model using the `glm` function.
+
+```{r}
+#| eval: TRUE
+
+### model the systematic component as a linear function of the predictors
+linear_glm <- glm(y ~ x_1 + x_2, family = binomial)
+
+summary(linear_glm)
+```
+
+```{r}
+#| eval: TRUE
+
+## Create a data frame
+data_1 <- data.frame(x_1, x_2, y, linpred = predict(linear_glm),
+                   predprob = predict(linear_glm, type = "response"),
+                   devres = residuals(linear_glm))
+
+### Deviance residuals against linear predictor X_1
+ggplot(data_1) +
+  geom_point(mapping = aes(x = x_1, y = devres)) +
+  labs(x = "Linear predictor X_1", y = "Deviance residuals") +
+  theme_minimal() +
+  labs(title = "Dev_res against linear predictor X_1 when model is wrong")
+```
+
+```{r}
+#| eval: TRUE
+
+### Binned deviance residuals against linear predictor X_1
+data_1 |>
+  group_by(cut(x_1, breaks = unique(quantile(x_1, (1:40)/41)))) |>
+  summarize(devres = mean(devres), x_1 = mean(x_1)) |>
+  ggplot() +
+  geom_point(mapping = aes(x = x_1, y = devres)) +
+  labs(x = "Linear predictor X_1", y = "Binned deviance residual") +
+  theme_minimal() +
+  labs(title = "Binned Dev_res against linear predictor X_1 when model is wrong")
+```
+From the above plot, we can see that there is an obvious quadratic relationship between the deviance residuals and the linear predictor $x_1$. This suggests that the true model is not linear in $x_1$.
+
+### Binned deviance residuals against the quadratic term $X_1^2$ assuming the true model is quadratic
+
+Now we fit a logistic regression model to this dataset, but we assume that the true model is quadratic, i.e., $\eta = \beta_0 + \beta_1 x_1^2 + \beta_2 x_2$. We fit the model using the `glm` function.
+
+```{r}
+#| eval: TRUE
+
+### model the systematic component as a linear function of the predictors
+quadratic_glm <- glm(y ~ I(x_1^2) + x_2, family = binomial)
+
+summary(quadratic_glm)
+```
+
+```{r}
+#| eval: TRUE
+
+## Create a data frame
+data_2 <- data.frame(x_1, x_2, y, linpred = predict(quadratic_glm),
+                   predprob = predict(quadratic_glm, type = "response"),
+                   devres = residuals(quadratic_glm))
+
+### Deviance residuals against linear predictor X_1^2
+ggplot(data_2) +
+  geom_point(mapping = aes(x = x_1^2, y = devres)) +
+  labs(x = "Quadratic term X_1^2", y = "Deviance residuals") +
+  theme_minimal() +
+  labs(title = "Dev_res against quadratic term X_1^2 when model is correct")
+```
+
+```{r}
+#| eval: TRUE
+
+### Binned deviance residuals against linear predictor X_1^2
+data_2 |>
+  mutate(x_1_sq = x_1^2) |>
+  group_by(cut(x_1_sq, breaks = unique(quantile(x_1_sq, (1:40)/41)))) |>
+  summarize(devres = mean(devres), x_1_sq = mean(x_1_sq)) |>
+  ggplot() +
+  geom_point(mapping = aes(x = x_1_sq, y = devres)) +
+  labs(x = "Quadratic term X_1^2", y = "Binned deviance residual") +
+  theme_minimal() +
+  labs(title = "Binned Dev_res against quadratic term X_1^2 when model is correct")
+```
+
+### Binned deviance residuals against fitted value $\hat{\eta}$ assuming the true model is quadratic
+
+```{r}
+#| eval: TRUE
+
+### Deviance residuals against fitted value
+ggplot(data_2) +
+  geom_point(mapping = aes(x = linpred, y = devres)) +
+  labs(x = "Linear predictor", y = "Deviance residuals") +
+  theme_minimal() +
+  labs(title = "Dev_res against linear predictor when model is correct")
+```
+
+```{r}
+#| eval: TRUE
+
+### Binned deviance residuals against fitted value
+data_2 |>
+  group_by(cut(linpred, breaks = unique(quantile(linpred, (1:40)/41)))) |>
+  summarize(devres = mean(devres), linpred = mean(linpred)) |>
+  ggplot() +
+  geom_point(mapping = aes(x = linpred, y = devres)) +
+  labs(x = "Linear predictor", y = "Binned deviance residual") +
+  theme_minimal() +
+  labs(title = "Binned Dev_res against linear predictor when model is correct")
+```
+
+### Binned deviance residuals against fitted value $\hat{\eta}$ assuming the true model is linear
+
+```{r}
+#| eval: TRUE
+
+### Deviance residuals against fitted value
+ggplot(data_1) +
+  geom_point(mapping = aes(x = linpred, y = devres)) +
+  labs(x = "Linear predictor", y = "Deviance residuals") +
+  theme_minimal() +
+  labs(title = "Dev_res against linear predictor when model is wrong")
+```
+
+
+```{r}
+#| eval: TRUE
+
+### Binned deviance residuals against fitted value
+data_1 |>
+  group_by(cut(linpred, breaks = unique(quantile(linpred, (1:40)/41)))) |>
+  summarize(devres = mean(devres), linpred = mean(linpred)) |>
+  ggplot() +
+  geom_point(mapping = aes(x = linpred, y = devres)) +
+  labs(x = "Linear predictor", y = "Binned deviance residual") +
+  theme_minimal() +
+  labs(title = "Binned Dev_res against linear predictor when model is wrong")
+```
+
+
+### Scatter plot of logit (binned $Y$) and $X_1^2$
+
+```{r}
+#| eval: TRUE
+
+data_1 |>
+  mutate(x_1_sq = x_1^2) |>
+  group_by(cut(x_1_sq, breaks = unique(quantile(x_1_sq, (1:40)/41))) ) |>
+  summarize(y = mean(y), x_1_sq = mean(x_1_sq), x_1_mean = mean(x_1)) |>
+  ggplot() +
+  geom_point(mapping = aes(x = x_1_mean, y = log(y / (1 - y))) ) +
+  labs(x = "X_1", y = "logit(Y)") +
+  theme_minimal() +
+  labs(title = "Scatter plot of logit(binned Y) and X_1") +
+  ylim(-2, 5)
+```
+
+### Scatter plot of logit (binned $Y$) and $\hat \eta$
+
+```{r}
+#| eval: TRUE
+
+data_1 |>
+  group_by(cut(linpred, breaks = unique(quantile(linpred, (1:40)/41))) ) |>
+  summarize(y = mean(y), linpred = mean(linpred)) |>
+  ggplot() +
+  geom_point(mapping = aes(x = linpred, y = log(y / (1 - y))) ) +
+  labs(x = "Linear predictor", y = "logit(Y)") +
+  theme_minimal() +
+  labs(title = "Scatter plot of logit(binned Y) and linear predictor when model is wrong") +
+  ylim(-3, 5)
+```
+
+```{r}
+#| eval: TRUE
+
+data_2 |>
+  group_by(cut(linpred, breaks = unique(quantile(linpred, (1:40)/41))) ) |>
+  summarize(y = mean(y), linpred = mean(linpred)) |>
+  ggplot() +
+  geom_point(mapping = aes(x = linpred, y = log(y / (1 - y))) ) +
+  labs(x = "Linear predictor", y = "logit(Y)") +
+  theme_minimal() +
+  labs(title = "Scatter plot of logit(binned Y) and linear predictor when model is correct") +
+  ylim(-3, 5)
+```
+
+
+### Scatter plot of logit (binned $Y$) and $X_1$
+
+```{r}
+#| eval: TRUE
+
+data_1 |>
+  group_by(cut(x_1, breaks = unique(quantile(x_1, (1:40)/41))) ) |>
+  summarize(y = mean(y), x_1 = mean(x_1)) |>
+  ggplot() +
+  geom_point(mapping = aes(x = x_1, y = log(y / (1 - y))) ) +
+  labs(x = "X_1", y = "logit(Y)") +
+  theme_minimal() +
+  labs(title = "Scatter plot of logit(binned Y) and X_1") +
+  ylim(-2, 5)
+```
+
+### Further exploration
+
+Harrell, F. E., Jr. (2016). Regression modeling strategies. Springer International Publishing. [link](https://warin.ca/ressources/books/2015_Book_RegressionModelingStrategies.pdf)
+
+Page 235
+
+Several types of residuals can be computed for binary logistic model fits. Many of these residuals are used to examine the influence of individual observations on the fit. The partial residual can be used for directly assessing how each predictor should be transformed. For the ith observation, the partial residual for the $j$th element of $X$ is defined by
+$$
+r_{ij} = \hat\beta_j X_{ij} + \frac{Y_i - \hat{p}_i}{\hat{p}_i (1 - \hat{p}_i)}
+$$
+where $X_{ij}$ is the value of the $j$th variable in the $i$th observation, $Y_i$ is the corresponding value of the response, and $\hat p_i$ is the predicted probability that $Y_i=1$. A smooth plot (using, e.g. loess) of $X_{ij}$ against $r_{ij}$ will provide an estimate of how $X_{j}$ should be transformed, adjusting for other $X$s (using their current transformations).
+
+```{r}
+#| eval: TRUE
+
+### Partial residual plot for linear predictor X_1
+
+data_1 |>
+  mutate(partial_res = linear_glm$coefficients[[2]] * x_1 +
+           (y - predprob)/(predprob * ( 1  - predprob))) |>
+  ggplot() +
+  geom_point(mapping = aes(x = x_1, y = partial_res)) +
+  geom_smooth(mapping = aes(x = x_1, y = partial_res), method = "loess") +
+  theme_minimal()
+```
+
+```{r}
+#| eval: TRUE
+
+### Partial residual plot for quadratic term X_1^2
+
+data_2 |>
+  mutate(partial_res = quadratic_glm$coefficients[[2]] * x_1^2 +
+           (y - predprob)/(predprob * ( 1  - predprob))) |>
+  ggplot() +
+  geom_point(mapping = aes(x = x_1^2, y = partial_res)) +
+  geom_smooth(mapping = aes(x = x_1^2, y = partial_res), method = "loess") +
+  theme_minimal()
+```

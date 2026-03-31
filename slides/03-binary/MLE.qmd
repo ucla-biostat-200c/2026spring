@@ -1,0 +1,100 @@
+---
+title: "Likelihood Theory (ELMR Appendix)"
+author: "Dr. Jin Zhou @ UCLA"
+subtitle: Biostat 200C
+date: today
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+engine: knitr
+knitr:
+  opts_chunk: 
+    fig.align: 'center'
+    # fig.width: 6
+    # fig.height: 4
+    message: FALSE
+    cache: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align = 'center', cache = FALSE)
+```
+
+Display system information and load `tidyverse` and `faraway` packages
+```{r}
+sessionInfo()
+library(tidyverse)
+library(faraway)
+```
+`faraway` package contains the datasets in the ELMR book.
+
+## Maximum Likelihood
+
+- Consider $n$ independent observations $Y_1, Y_2, \ldots, Y_n$ from a distribution with density $f(y\mid \theta)$, where $\theta$ is the, possibly vector-valued, parameter. Suppose we observe $\mathbf{y} = (y_1,\ldots, y_n)^T$, then we define the likelihood as   
+$$
+L(\theta\mid y) = P(\mathbf{Y} = \mathbf{y}) = f(y_1,\ldots, y_n\mid \theta) = \prod_{i=1}^n f(y_i\mid \theta)
+$$
+- The likelihood is a function of the parameter(s) given the data and is the probability of the observed data given a specified value of the parameter(s).
+
+- For continuous data, the likelihood is a density function and is not a probability. For continuous random variables, $Y_1, Y_2, \ldots, Y_n$, with probability density function $f(y\mid \theta)$. For $y_i$, 
+$$
+P(Y_i = y_i) = P(y_i \leq Y_i \leq y_i + dy) = f(y_i\mid \theta)dy
+$$
+- The likelihood is the joint density of the data, $f(y_1,\ldots, y_n\mid \theta)$, evaluated at the observed data, $\mathbf{y}$.
+$$
+L(\theta\mid y) \approx \prod_{i=1}^n f(y_i\mid \theta)
+$$
+
+- For example, suppose that $Y$ is binomially distributed $B(n, p)$. The likelihood is
+$$
+L(p\mid y) = P(Y = y) = {n \choose y} p^y(1-p)^{n-y}
+$$
+- The maximum likelihood estimate (MLE) is the the parameter(s) ($\theta$) that gives the largest probability to the observed data, or in other words, MLE of $\theta$ is the value of $\theta$ that maximizes the likelihood function. The MLE is denoted by $\hat{\theta}$.
+
+- In most cases, it is easier to maximize the log of likelihood function, $l(\theta\mid y) = logL(\theta \mid y)$. Since log is a monotone increasing function, the maximum occurs at the same $\hat \theta$.
+
+- Example, for binoimal distribution, the log likelihood is
+$$
+l(p\mid y) = logL(p\mid y) = \log{n \choose y} + y\log(p) + (n-y)\log(1-p)
+$$
+
+## Estimation
+
+- The **score function** is the derivative of the log likelihood with respect to the parameter(s). 
+$$
+u(p\mid y) = \frac{\partial l(p\mid y)}{\partial p} = \frac{y}{p} - \frac{n-y}{1-p}
+$$
+
+- We can find the maximum likelihood estimate $\hat p$ by solving $u(p) = 0$. We get $\hat p = y/n$. We should also verify that this stationary point actually represents a maximum, i.e., second derivative is negative.
+
+- Other properties of maximum likelihood estimators include consistency, sufficiency, asymptotic efficiency and asymptotic normality. These are discussed in books such as [A Course in Large Sample Theory](https://www.routledge.com/A-Course-in-Large-Sample-Theory/Ferguson/p/book/9781138445765?source=shoppingads&locale=en-USD&gad_source=1&gclid=Cj0KCQjwq86wBhDiARIsAJhuphkKo5BGKtpJBvvmWRg7DOhlPwHk-yHSpaV-7B06F-UVqfDzZASbGcIaAli0EALw_wcB) or [Kalbfleisch (1985, Chapters 1 and 2)](https://link.springer.com/book/10.1007/978-1-4612-1096-2).
+
+- Usually we want more than an estimate; some measure of the uncertainty in the estimate is valuable. This can be obtained via the Fisher information which is:
+$$
+I(\theta) = \mbox{var}\,\, u(\theta)  = -\mbox{E}\left[\frac{\partial^2 l(\theta\mid y)}{\partial \theta^2}\right]
+$$
+- One can show that the variance of $\hat{\theta}$ can be estimated by:
+$$
+\mbox{var}(\hat{\theta}) = \frac{1}{I(\theta)}
+$$
+under mild regularity conditions. For the binomial example this gives:
+$$
+\mbox{var}(\hat{p}) = \frac{\hat{p}(1-\hat{p})}{n}
+$$
+
+- Examples where likelihood can be maximized explicitly are confined to simple cases. Typically, numerical optimization is necessary. The Newton–Raphson method is the most well-known technique.  
+$$
+\theta_{k+1} = \theta_k - H^{-1}(\theta_k) u(\theta_k)
+$$
+where $H(\theta)$ is the Hessian matrix of second derivatives of the log likelihood function evaluated at $\theta$.
+$$
+H(\theta) = \frac{\partial^2 l(\theta\mid y)}{\partial \theta \partial \theta^T}
+$$
+We iterate this method, putting $\theta_{k+1}$ in place of $\theta_{k}$ and so on, until the procedure (hopefully) converges. The Fisher scoring method replaces $H$ with $-I$ and sometimes gives superior results. This method is used in fitting GLMs and is equivalent to iteratively reweighted least squares.
+
