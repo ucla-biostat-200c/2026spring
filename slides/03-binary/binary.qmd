@@ -130,7 +130,7 @@ ggplot(data = tibble(x = 0), mapping = aes(x = x)) + # null data
 &=& \sum_i \left[ y_i \eta_i - \log (1 + e^{\eta_i}) \right] \\
 &=& \sum_i \left[ y_i \cdot \mathbf{x}_i^T \boldsymbol{\beta} - \log (1 + e^{\mathbf{x}_i^T \boldsymbol{\beta}}) \right].
 \end{eqnarray*}
-HW1 Bonus: show that the log-likelihood function of logistic regression is a concave function in $\boldsymbol{\beta}$. If you need a refresher how to take derivatives with respect to a vector or matrix.
+HW1 Bonus: show that the log-likelihood function of logistic regression is a concave function in $\boldsymbol{\beta}$. 
 
 - Maximization of this log-likelihood function can be carried out by the Newton-Raphson (also known as Fisher scoring) algorithm.
 ```{r}
