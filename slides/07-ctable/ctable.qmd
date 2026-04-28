@@ -74,8 +74,39 @@ summary(ytable)
     2. We decided to sample 450 wafers. The data were then cross-classified. We could use a multinomial model.
     3. We selected 400 wafers without particles and 50 wafers with particles and then recorded the good or bad outcome. We could use a binomial model.
     4. We selected 400 wafers without particles and 50 wafers with particles that also included, by design, 334 good wafers and 116 bad ones. We could use a hypergeometric model.
+    
+### Poisson sampling: no margins are fixed
+
+| Particle | Good | Bad | Total |
+|---|---:|---:|---:|
+| No  | ? | ? | ? |
+| Yes | ? | ? | ? |
+| **Total** | ? | ? | ? |
+
+### Multinomial sampling: only the grand total is fixed
+
+| Particle | Good | Bad | Total |
+|---|---:|---:|---:|
+| No  | ? | ? | ? |
+| Yes | ? | ? | ? |
+| **Total** | ? | ? | **450 fixed** |
 
 
+### Product binomial sampling: row totals are fixed
+
+| Particle | Good | Bad | Total |
+|---|---:|---:|---:|
+| No  | ? | ? | **400 fixed** |
+| Yes | ? | ? | **50 fixed** |
+| **Total** | ? | ? | **450 fixed** |
+
+### Hypergeometric sampling: row and column totals are fixed
+
+| Particle | Good | Bad | Total |
+|---|---:|---:|---:|
+| No  | ? | ? | **400 fixed** |
+| Yes | ? | ? | **50 fixed** |
+| **Total** | **334 fixed** | **116 fixed** | **450 fixed** |
 
 ### Poisson model
 

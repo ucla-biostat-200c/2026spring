@@ -2350,10 +2350,14 @@ window.Quarto = {
   <ul>
   <li><a href="#two-by-two-tables" id="toc-two-by-two-tables" class="nav-link active" data-scroll-target="#two-by-two-tables"><span class="header-section-number">1</span> Two-by-two tables</a>
   <ul>
-  <li><a href="#poisson-model" id="toc-poisson-model" class="nav-link" data-scroll-target="#poisson-model"><span class="header-section-number">1.1</span> Poisson model</a></li>
-  <li><a href="#multinomial-model" id="toc-multinomial-model" class="nav-link" data-scroll-target="#multinomial-model"><span class="header-section-number">1.2</span> Multinomial model</a></li>
-  <li><a href="#binomial" id="toc-binomial" class="nav-link" data-scroll-target="#binomial"><span class="header-section-number">1.3</span> Binomial</a></li>
-  <li><a href="#hypergeometric" id="toc-hypergeometric" class="nav-link" data-scroll-target="#hypergeometric"><span class="header-section-number">1.4</span> Hypergeometric</a></li>
+  <li><a href="#poisson-sampling-no-margins-are-fixed" id="toc-poisson-sampling-no-margins-are-fixed" class="nav-link" data-scroll-target="#poisson-sampling-no-margins-are-fixed"><span class="header-section-number">1.1</span> Poisson sampling: no margins are fixed</a></li>
+  <li><a href="#multinomial-sampling-only-the-grand-total-is-fixed" id="toc-multinomial-sampling-only-the-grand-total-is-fixed" class="nav-link" data-scroll-target="#multinomial-sampling-only-the-grand-total-is-fixed"><span class="header-section-number">1.2</span> Multinomial sampling: only the grand total is fixed</a></li>
+  <li><a href="#product-binomial-sampling-row-totals-are-fixed" id="toc-product-binomial-sampling-row-totals-are-fixed" class="nav-link" data-scroll-target="#product-binomial-sampling-row-totals-are-fixed"><span class="header-section-number">1.3</span> Product binomial sampling: row totals are fixed</a></li>
+  <li><a href="#hypergeometric-sampling-row-and-column-totals-are-fixed" id="toc-hypergeometric-sampling-row-and-column-totals-are-fixed" class="nav-link" data-scroll-target="#hypergeometric-sampling-row-and-column-totals-are-fixed"><span class="header-section-number">1.4</span> Hypergeometric sampling: row and column totals are fixed</a></li>
+  <li><a href="#poisson-model" id="toc-poisson-model" class="nav-link" data-scroll-target="#poisson-model"><span class="header-section-number">1.5</span> Poisson model</a></li>
+  <li><a href="#multinomial-model" id="toc-multinomial-model" class="nav-link" data-scroll-target="#multinomial-model"><span class="header-section-number">1.6</span> Multinomial model</a></li>
+  <li><a href="#binomial" id="toc-binomial" class="nav-link" data-scroll-target="#binomial"><span class="header-section-number">1.7</span> Binomial</a></li>
+  <li><a href="#hypergeometric" id="toc-hypergeometric" class="nav-link" data-scroll-target="#hypergeometric"><span class="header-section-number">1.8</span> Hypergeometric</a></li>
   </ul></li>
   <li><a href="#larger-two-way-tables" id="toc-larger-two-way-tables" class="nav-link" data-scroll-target="#larger-two-way-tables"><span class="header-section-number">2</span> Larger two-way tables</a></li>
   <li><a href="#three-way-contingency-tables" id="toc-three-way-contingency-tables" class="nav-link" data-scroll-target="#three-way-contingency-tables"><span class="header-section-number">3</span> Three-way contingency tables</a>
@@ -2495,8 +2499,140 @@ Test for independence of all factors:
 <li>We selected 400 wafers without particles and 50 wafers with particles that also included, by design, 334 good wafers and 116 bad ones. We could use a hypergeometric model.</li>
 </ol></li>
 </ul>
-<section id="poisson-model" class="level3" data-number="1.1">
-<h3 data-number="1.1" class="anchored" data-anchor-id="poisson-model"><span class="header-section-number">1.1</span> Poisson model</h3>
+<section id="poisson-sampling-no-margins-are-fixed" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="poisson-sampling-no-margins-are-fixed"><span class="header-section-number">1.1</span> Poisson sampling: no margins are fixed</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Particle</th>
+<th style="text-align: right;">Good</th>
+<th style="text-align: right;">Bad</th>
+<th style="text-align: right;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+</tr>
+<tr class="even">
+<td>Yes</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="multinomial-sampling-only-the-grand-total-is-fixed" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="multinomial-sampling-only-the-grand-total-is-fixed"><span class="header-section-number">1.2</span> Multinomial sampling: only the grand total is fixed</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Particle</th>
+<th style="text-align: right;">Good</th>
+<th style="text-align: right;">Bad</th>
+<th style="text-align: right;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+</tr>
+<tr class="even">
+<td>Yes</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;"><strong>450 fixed</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="product-binomial-sampling-row-totals-are-fixed" class="level3" data-number="1.3">
+<h3 data-number="1.3" class="anchored" data-anchor-id="product-binomial-sampling-row-totals-are-fixed"><span class="header-section-number">1.3</span> Product binomial sampling: row totals are fixed</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Particle</th>
+<th style="text-align: right;">Good</th>
+<th style="text-align: right;">Bad</th>
+<th style="text-align: right;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;"><strong>400 fixed</strong></td>
+</tr>
+<tr class="even">
+<td>Yes</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;"><strong>50 fixed</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;"><strong>450 fixed</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="hypergeometric-sampling-row-and-column-totals-are-fixed" class="level3" data-number="1.4">
+<h3 data-number="1.4" class="anchored" data-anchor-id="hypergeometric-sampling-row-and-column-totals-are-fixed"><span class="header-section-number">1.4</span> Hypergeometric sampling: row and column totals are fixed</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Particle</th>
+<th style="text-align: right;">Good</th>
+<th style="text-align: right;">Bad</th>
+<th style="text-align: right;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;"><strong>400 fixed</strong></td>
+</tr>
+<tr class="even">
+<td>Yes</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;"><strong>50 fixed</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td style="text-align: right;"><strong>334 fixed</strong></td>
+<td style="text-align: right;"><strong>116 fixed</strong></td>
+<td style="text-align: right;"><strong>450 fixed</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="poisson-model" class="level3" data-number="1.5">
+<h3 data-number="1.5" class="anchored" data-anchor-id="poisson-model"><span class="header-section-number">1.5</span> Poisson model</h3>
 <ul>
 <li>We observe the manufacturing process for a certain period of time and observe 450 wafers. The data are then cross-classified. We model the observed counts by Poisson.</li>
 </ul>
@@ -2533,8 +2669,8 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <li><p>Therefore our conclusion is that presence of particle in the die significantly affects the quality of wafer.</p></li>
 </ul>
 </section>
-<section id="multinomial-model" class="level3" data-number="1.2">
-<h3 data-number="1.2" class="anchored" data-anchor-id="multinomial-model"><span class="header-section-number">1.2</span> Multinomial model</h3>
+<section id="multinomial-model" class="level3" data-number="1.6">
+<h3 data-number="1.6" class="anchored" data-anchor-id="multinomial-model"><span class="header-section-number">1.6</span> Multinomial model</h3>
 <ul>
 <li><p>If we assume the total sample size is fixed at <span class="math inline">\(n=450\)</span>. Then we can model the counts by a multinomial model. We consdier two models</p>
 <ul>
@@ -2582,8 +2718,8 @@ D &amp;=&amp; 2 \sum_i \sum_j y_{ij} \log \frac{y_{ij}}{n} - 2 \sum_i \left(\sum
 <li><p>This connection between Poisson and multinomial is no surprise due to the following fact. If <span class="math inline">\(Y_1, \ldots, Y_k\)</span> are independent Poisson with means <span class="math inline">\(\lambda_1, \ldots, \lambda_k\)</span>, then the joint distribution of <span class="math inline">\(Y_1, \ldots, Y_k \mid \sum_i Y_i = n\)</span> is multinomial with probabilities <span class="math inline">\(p_j = \lambda_j / \sum_i \lambda_i\)</span>.</p></li>
 </ul>
 </section>
-<section id="binomial" class="level3" data-number="1.3">
-<h3 data-number="1.3" class="anchored" data-anchor-id="binomial"><span class="header-section-number">1.3</span> Binomial</h3>
+<section id="binomial" class="level3" data-number="1.7">
+<h3 data-number="1.7" class="anchored" data-anchor-id="binomial"><span class="header-section-number">1.7</span> Binomial</h3>
 <ul>
 <li><p>If we view <code>particle</code> as a predictor affecting whether a wafer is good quality or bad quality, we end up with an independent binomial model.</p></li>
 <li><p>The null (intercept-only) model corresponds to the hypothesis <code>particle</code> does not affect quality.</p></li>
@@ -2628,8 +2764,8 @@ Number of Fisher Scoring iterations: 3</code></pre>
 <li><p>When there are more than two rows or columns, this model is called the <strong>product binoimal/multinomial model</strong>.</p></li>
 </ul>
 </section>
-<section id="hypergeometric" class="level3" data-number="1.4">
-<h3 data-number="1.4" class="anchored" data-anchor-id="hypergeometric"><span class="header-section-number">1.4</span> Hypergeometric</h3>
+<section id="hypergeometric" class="level3" data-number="1.8">
+<h3 data-number="1.8" class="anchored" data-anchor-id="hypergeometric"><span class="header-section-number">1.8</span> Hypergeometric</h3>
 <ul>
 <li><p>Finally if we fix both row and column marginal totals, the probability of the observed table is <span class="math display">\[\begin{eqnarray*}
 p(y_{11}, y_{12}, y_{21}, y_{22}) &amp;=&amp; \frac{\binom{y_{1\cdot}}{y_{11}} \binom{y_{2\cdot}}{y_{22}} \binom{y_{\cdot 1}}{y_{21}} \binom{y_{\cdot 2}}{y_{12}}}{\binom{n}{y_{11} \, y_{12} \, y_{21} \, y_{22}}} \\
@@ -2938,20 +3074,20 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>modi <span class="sc">%&gt;%</span> <span class="fu">tbl_regression</span>(<span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">intercept =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="tcqsfqawlm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tcqsfqawlm table {
+<div id="dztlohotfx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dztlohotfx table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#tcqsfqawlm thead, #tcqsfqawlm tbody, #tcqsfqawlm tfoot, #tcqsfqawlm tr, #tcqsfqawlm td, #tcqsfqawlm th {
+#dztlohotfx thead, #dztlohotfx tbody, #dztlohotfx tfoot, #dztlohotfx tr, #dztlohotfx td, #dztlohotfx th {
 border-style: none;
 }
-#tcqsfqawlm p {
+#dztlohotfx p {
 margin: 0;
 padding: 0;
 }
-#tcqsfqawlm .gt_table {
+#dztlohotfx .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -2976,11 +3112,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_caption {
+#dztlohotfx .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#tcqsfqawlm .gt_title {
+#dztlohotfx .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -2991,7 +3127,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#tcqsfqawlm .gt_subtitle {
+#dztlohotfx .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -3002,7 +3138,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#tcqsfqawlm .gt_heading {
+#dztlohotfx .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -3013,12 +3149,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_bottom_border {
+#dztlohotfx .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_col_headings {
+#dztlohotfx .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3032,7 +3168,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_col_heading {
+#dztlohotfx .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3051,7 +3187,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#tcqsfqawlm .gt_column_spanner_outer {
+#dztlohotfx .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3062,13 +3198,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#tcqsfqawlm .gt_column_spanner_outer:first-child {
+#dztlohotfx .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#tcqsfqawlm .gt_column_spanner_outer:last-child {
+#dztlohotfx .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#tcqsfqawlm .gt_column_spanner {
+#dztlohotfx .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -3079,10 +3215,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#tcqsfqawlm .gt_spanner_row {
+#dztlohotfx .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#tcqsfqawlm .gt_group_heading {
+#dztlohotfx .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3107,7 +3243,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#tcqsfqawlm .gt_empty_group_heading {
+#dztlohotfx .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -3121,13 +3257,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#tcqsfqawlm .gt_from_md > :first-child {
+#dztlohotfx .gt_from_md > :first-child {
 margin-top: 0;
 }
-#tcqsfqawlm .gt_from_md > :last-child {
+#dztlohotfx .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#tcqsfqawlm .gt_row {
+#dztlohotfx .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3145,7 +3281,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#tcqsfqawlm .gt_stub {
+#dztlohotfx .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3157,7 +3293,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tcqsfqawlm .gt_stub_row_group {
+#dztlohotfx .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3170,13 +3306,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#tcqsfqawlm .gt_row_group_first td {
+#dztlohotfx .gt_row_group_first td {
 border-top-width: 2px;
 }
-#tcqsfqawlm .gt_row_group_first th {
+#dztlohotfx .gt_row_group_first th {
 border-top-width: 2px;
 }
-#tcqsfqawlm .gt_summary_row {
+#dztlohotfx .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3185,14 +3321,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tcqsfqawlm .gt_first_summary_row {
+#dztlohotfx .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_first_summary_row.thick {
+#dztlohotfx .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#tcqsfqawlm .gt_last_summary_row {
+#dztlohotfx .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3201,7 +3337,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_grand_summary_row {
+#dztlohotfx .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3210,7 +3346,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tcqsfqawlm .gt_first_grand_summary_row {
+#dztlohotfx .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3219,7 +3355,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_last_grand_summary_row_top {
+#dztlohotfx .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3228,10 +3364,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_striped {
+#dztlohotfx .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#tcqsfqawlm .gt_table_body {
+#dztlohotfx .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3239,7 +3375,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_footnotes {
+#dztlohotfx .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3252,7 +3388,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_footnote {
+#dztlohotfx .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -3260,7 +3396,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tcqsfqawlm .gt_sourcenotes {
+#dztlohotfx .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3273,64 +3409,64 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#tcqsfqawlm .gt_sourcenote {
+#dztlohotfx .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tcqsfqawlm .gt_left {
+#dztlohotfx .gt_left {
 text-align: left;
 }
-#tcqsfqawlm .gt_center {
+#dztlohotfx .gt_center {
 text-align: center;
 }
-#tcqsfqawlm .gt_right {
+#dztlohotfx .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#tcqsfqawlm .gt_font_normal {
+#dztlohotfx .gt_font_normal {
 font-weight: normal;
 }
-#tcqsfqawlm .gt_font_bold {
+#dztlohotfx .gt_font_bold {
 font-weight: bold;
 }
-#tcqsfqawlm .gt_font_italic {
+#dztlohotfx .gt_font_italic {
 font-style: italic;
 }
-#tcqsfqawlm .gt_super {
+#dztlohotfx .gt_super {
 font-size: 65%;
 }
-#tcqsfqawlm .gt_footnote_marks {
+#dztlohotfx .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#tcqsfqawlm .gt_asterisk {
+#dztlohotfx .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#tcqsfqawlm .gt_indent_1 {
+#dztlohotfx .gt_indent_1 {
 text-indent: 5px;
 }
-#tcqsfqawlm .gt_indent_2 {
+#dztlohotfx .gt_indent_2 {
 text-indent: 10px;
 }
-#tcqsfqawlm .gt_indent_3 {
+#dztlohotfx .gt_indent_3 {
 text-indent: 15px;
 }
-#tcqsfqawlm .gt_indent_4 {
+#dztlohotfx .gt_indent_4 {
 text-indent: 20px;
 }
-#tcqsfqawlm .gt_indent_5 {
+#dztlohotfx .gt_indent_5 {
 text-indent: 25px;
 }
-#tcqsfqawlm .katex-display {
+#dztlohotfx .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#tcqsfqawlm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#dztlohotfx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
