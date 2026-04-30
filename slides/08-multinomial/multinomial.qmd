@@ -422,7 +422,11 @@ tibble(x = seq(-4, 4, by = 0.05),
   labs(y = "dlogis(x)")
 ```
 
-- The probability of being a Democrat is given by the area lying to the left of the leftmost of each pair of lines, while the probability of being a Republican is given by the area to the right of the rightmost of the pair. Independents are represented by the area in-between.
+- Solid lines represent an income of $0, dotted lines are for $50,000 and dashed
+lines are for $100,000. The probability of being a Democrat is given by the area lying to the
+left of the leftmost of each pair of lines, while the probability of being a Republican is given
+by the area to the right of the rightmost of the pair. Independents are represented by the area
+in-between.
 
 
 ### Ordered probit model
