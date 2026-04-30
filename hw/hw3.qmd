@@ -1,0 +1,96 @@
+---
+title: "Biostat 200C Homework 3"
+subtitle: Due May 9 @ 11:59PM
+date: today
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+engine: knitr
+knitr:
+  opts_chunk: 
+    fig.align: 'center'
+    # fig.width: 6
+    # fig.height: 4
+    message: FALSE
+    cache: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+```
+
+To submit homework, please upload both Rmd and html files to Bruinlearn by the deadline.
+
+## Q1. Concavity of Poisson regression log-likelihood (50pts)
+
+Let $Y_1,\ldots,Y_n$ be independent random variables with $Y_i \sim \text{Poisson}(\mu_i)$ and $\log \mu_i = \mathbf{x}_i^T \boldsymbol{\beta}$, $i = 1,\ldots,n$.
+
+### Q1.1 (10pts)
+
+Write down the log-likelihood function.
+
+### Q1.2 (10pts)
+
+Derive the gradient vector and Hessian matrix of the log-likelihood function with respect to the regression coefficients $\boldsymbol{\beta}$. 
+
+### Q1.3 (20pts)
+
+Show that the log-likelihood function of the log-linear model is a concave function in regression coefficients $\boldsymbol{\beta}$. (Hint: show that the negative Hessian is a positive semidefinite matrix.)
+
+### Q1.4 (10pts)
+
+Show that for the fitted values $\widehat{\mu}_i$ from maximum likelihood estimates
+$$
+\sum_i \widehat{\mu}_i = \sum_i y_i.
+$$
+Therefore the deviance reduces to
+$$
+D = 2 \sum_i y_i \log \frac{y_i}{\widehat{\mu}_i}.
+$$
+
+## Q2. Show negative binomial distribution mean and variance (20pts)
+
+Recall the probability mass function of negative binomial distribution is 
+$$
+\mathbb{P}(Y = y) = \binom{y + r - 1}{r - 1} (1 - p)^r p^y, \quad y = 0, 1, \ldots
+$$
+Show $\mathbb{E}Y = \mu = rp / (1 - p)$ and $\operatorname{Var} Y = r p / (1 - p)^2$.
+
+## Q3. ELMR Chapter 5 Exercise 5 (page 100) (70pts)
+
+(a) (5pts)
+
+(b) (5pts)
+
+(c) (10pts)
+
+(d) (10pts)
+
+(e) (10pts)
+
+(f) (5pts)
+
+(g) (10pts)
+
+(h) (15pts)
+ 
+ 
+## Q4. Uniform association (20pts)
+
+For the uniform association when all two-way interactions are included, i.e., 
+$$
+\log \mathbb{E}Y_{ijk} = \log p_{ijk} = \log n + \log p_i + \log p_j + \log p_k + \log p_{ij} + \log p_{ik} + \log p_{jk}.
+$$
+
+Proof the odds ratio (or log of odds ratio) across all stratum $k$ 
+$$
+\log \frac{\mathbb{E}Y_{11k}\mathbb{E}Y_{22k}}{\mathbb{E}Y_{12k}\mathbb{E}Y_{21k}}
+$$
+
+is a constant, i.e., the estimated effect of the interaction term "i:j" in the uniform association model 
