@@ -1,6 +1,6 @@
 ---
 title: "Biostat 200C Homework 4"
-subtitle: Due May 23  @ 11:59PM
+subtitle: Due May 22  @ 11:59PM
 date: today
 format:
   html:
