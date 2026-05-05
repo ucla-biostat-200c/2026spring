@@ -161,31 +161,95 @@ $$
 | Inverse Gaussian | $\eta = \mu^{-2}$             | $\mu^3$           |
 
 ## Fisher scoring algorithm and IRWLS
-- GLM regreesion coefficients are estimated by MLE. Recall that the Newton-Raphson algorithm for maximizing a log-likelihood $\ell(\boldsymbol{\beta})$ proceeds as
+- GLM regression coefficients are estimated by MLE. Recall that the Newton-Raphson algorithm for maximizing a log-likelihood $\ell(\boldsymbol{\beta})$ proceeds as
 $$
   \boldsymbol{\beta}^{(t+1)} = \boldsymbol{\beta}^{(t)} + s [- \nabla^2 \ell(\boldsymbol{\beta}^{(t)})]^{-1} \nabla \ell(\boldsymbol{\beta}^{(t)}),
 $$
-where $s>0$ is a step length, $\nabla \ell$ is the **score (gradient) vector**, and $-\nabla^2 \ell$ is the **observed information matrix** (negative Hessian). See Biostat 257 [lecture notes](https://ucla-biostat-257.github.io/2022spring/slides/23-newton/newton.html)
+where $s>0$ is a step length, $\nabla \ell$ is the **score (gradient) vector**, and $-\nabla^2 \ell$ is the **observed information matrix** (negative Hessian).  
 
-- For GLM, 
+### Canonical link: direct derivation
+
+- First consider a GLM with the canonical link. Then
+$$
+  \theta_i = \eta_i = \mathbf{x}_i^T\boldsymbol{\beta}.
+$$
+Substituting this directly into the exponential-family log-likelihood gives
 \begin{eqnarray*}
-  \ell(\boldsymbol{\beta}) &=& \sum_{i=1}^n \frac{y_i \theta_i - b(\theta_i)}{a(\phi)} + c(y_i, \phi) \\
-  \nabla \ell(\boldsymbol{\beta}) &=& \sum_{i=1}^n \frac{(y_i - \mu_i) \mu_i'(\eta_i)}{\sigma_i^2} \mathbf{x}_i \\
+  \ell(\boldsymbol{\beta})
+  &=& \sum_{i=1}^n \left[\frac{y_i\mathbf{x}_i^T\boldsymbol{\beta} - b(\mathbf{x}_i^T\boldsymbol{\beta})}{a(\phi)} + c(y_i, \phi)\right].
+\end{eqnarray*}
+Differentiating with respect to $\boldsymbol{\beta}$,
+\begin{eqnarray*}
+  \nabla \ell(\boldsymbol{\beta})
+  &=& \frac{1}{a(\phi)}\sum_{i=1}^n \left[y_i - b'(\mathbf{x}_i^T\boldsymbol{\beta})\right]\mathbf{x}_i \\
+  &=& \frac{1}{a(\phi)}\sum_{i=1}^n (y_i - \mu_i)\mathbf{x}_i \\
+  &=& \frac{1}{a(\phi)}\mathbf{X}^T(\mathbf{y}-\boldsymbol{\mu}).
+\end{eqnarray*}
+Thus the MLE satisfies
+$$
+  \mathbf{X}^T(\mathbf{y}-\widehat{\boldsymbol{\mu}})=\mathbf{0}.
+$$
+This has the same form as the normal equations in least squares: the residual vector is orthogonal to each column of $\mathbf{X}$.
+
+- The Hessian is also simple under the canonical link:
+\begin{eqnarray*}
+  -\nabla^2\ell(\boldsymbol{\beta})
+  &=& \frac{1}{a(\phi)}\sum_{i=1}^n b''(\theta_i)\mathbf{x}_i\mathbf{x}_i^T \\
+  &=& \sum_{i=1}^n \frac{\sigma_i^2}{[a(\phi)]^2}\mathbf{x}_i\mathbf{x}_i^T.
+\end{eqnarray*}
+Equivalently,
+$$
+  -\nabla^2\ell(\boldsymbol{\beta}) = \mathbf{X}^T\mathbf{W}\mathbf{X},
+  \qquad
+  \mathbf{W}=\operatorname{diag}\left(\frac{b''(\theta_i)}{a(\phi)}\right)
+  =\operatorname{diag}\left(\frac{\sigma_i^2}{[a(\phi)]^2}\right).
+$$
+Since $b''(\theta_i)\geq 0$, the negative Hessian is positive semidefinite.
+
+### General link: where the extra factors enter
+
+- For a non-canonical link, $\eta_i=g(\mu_i)$ but usually $\eta_i\neq \theta_i$. Then we cannot substitute $\theta_i=\mathbf{x}_i^T\boldsymbol{\beta}$ directly. The score follows from the chain rule:
+$$
+  \frac{\partial \ell_i}{\partial \boldsymbol{\beta}}
+  =
+  \frac{\partial \ell_i}{\partial \theta_i}
+  \frac{d\theta_i}{d\mu_i}
+  \frac{d\mu_i}{d\eta_i}
+  \frac{\partial \eta_i}{\partial \boldsymbol{\beta}}.
+$$
+Using
+$$
+  \frac{\partial \ell_i}{\partial \theta_i}=\frac{y_i-\mu_i}{a(\phi)},
+  \qquad
+  \frac{d\theta_i}{d\mu_i}=\frac{a(\phi)}{\sigma_i^2},
+  \qquad
+  \frac{\partial \eta_i}{\partial \boldsymbol{\beta}}=\mathbf{x}_i,
+$$
+we obtain
+$$
+  \nabla \ell(\boldsymbol{\beta})
+  = \sum_{i=1}^n \frac{(y_i - \mu_i) \mu_i'(\eta_i)}{\sigma_i^2} \mathbf{x}_i.
+$$
+For the canonical link, $\mu_i'(\eta_i)=d\mu_i/d\theta_i=\sigma_i^2/a(\phi)$, so this reduces to the canonical-link score derived above.
+
+- Differentiating the general-link score gives
+\begin{eqnarray*}
   - \nabla^2 \ell(\boldsymbol{\beta}) &=& \sum_{i=1}^n \frac{[\mu_i'(\eta_i)]^2}{\sigma_i^2} \mathbf{x}_i \mathbf{x}_i^T - \sum_{i=1}^n \frac{(y_i - \mu_i) \mu_i''(\eta_i)}{\sigma_i^2} \mathbf{x}_i \mathbf{x}_i^T \\
   & & + \sum_{i=1}^n \frac{(y_i - \mu_i) [\mu_i'(\eta_i)]^2 (d \sigma_i^{2} / d\mu_i)}{\sigma_i^4} \mathbf{x}_i \mathbf{x}_i^T.
 \end{eqnarray*}
-
-For GLMs with canonical links, the second term and third term cancel using the fact
+For canonical links, the second and third terms cancel. To see this, note that under the canonical link $\mu_i'(\eta_i) = b''(\theta_i) = \sigma_i^2/a(\phi)$, and by the chain rule
 $$
-\frac{d\mu_i}{d \eta_i} = \frac{d\mu_i}{d \theta_i} = \frac{d \, b'(\theta_i)}{d \theta_i} = b''(\theta_i) = \frac{\sigma_i^2}{a(\phi)}.
+  \frac{d \sigma_i^2}{d \mu_i} = \frac{d \sigma_i^2}{d \theta_i} \cdot \frac{d \theta_i}{d \mu_i} = b'''(\theta_i) a(\phi) \cdot \frac{1}{b''(\theta_i)} = \frac{\mu_i''(\eta_i) \, a(\phi)}{\mu_i'(\eta_i)}.
 $$
-Therefore for canonical link the negative Hessian is positive semidefinte and Newton's algorithm with line search is stable. 
+Substituting into the third term and using $\sigma_i^4 = [\mu_i'(\eta_i)]^2 [a(\phi)]^2$ gives $\frac{(y_i - \mu_i)\mu_i''(\eta_i)}{\sigma_i^2} \mathbf{x}_i \mathbf{x}_i^T$, exactly cancelling the second term.
+The remaining first term is the $\mathbf{X}^T\mathbf{W}\mathbf{X}$ negative Hessian shown above.
 
-- How about non-canonical link? We use the expected (Fisher) information matrix
+- Fisher scoring replaces the observed information by the expected information matrix. Since $\mathbb{E}(y_i-\mu_i)=0$, the two residual-dependent terms vanish in expectation, giving
 $$
   \mathbb{E} [- \nabla^2 \ell(\boldsymbol{\beta})] = \sum_{i=1}^n \frac{[\mu_i'(\eta_i)]^2}{\sigma_i^2} \mathbf{x}_i \mathbf{x}_i^T = \mathbf{X}^T \mathbf{W} \mathbf{X} \succeq 0,
 $$
-where $\mathbf{W} = \text{diag}([\mu_i'(\eta_i)]^2/\sigma_i^2)$. This modified Newton-Raphson algorithm is called the **Fisher scoring algorithm**. 
+where $\mathbf{W} = \operatorname{diag}([\mu_i'(\eta_i)]^2/\sigma_i^2)$. The resulting modified Newton-Raphson algorithm is called the **Fisher scoring algorithm**. For canonical links, the expected information equals the observed information.
+
 
 - Take the Binomial logistic regression as an example
 \begin{eqnarray*}
@@ -415,7 +479,7 @@ summary(modpl)
 
 - Q-Q plot of the residuals is the standard way to check the normality assumption on the errors. For GLM, it's better use a half-normal plot that compares the sorted absolute residuals and the quantiles of the half-normal distribution
 $$
-  \Phi^{-1} \left( \frac{n+i}{2n + i} \right), \quad i=1,\ldots,n.
+  \Phi^{-1} \left( \frac{n+i}{2n + 1} \right), \quad i=1,\ldots,n.
 $$
 The residuals are not expected to be normally distributed, so we are not looking for an approximate straight line. We only seek outliers which may be identified as points off the trend. A half-normal plot is better for this purpose because in a sense the resolution of the plot is doubled by having all the points in one tail.
 ```{r}

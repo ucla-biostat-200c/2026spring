@@ -1,0 +1,52 @@
+---
+title: "Biostat 200C Homework 4"
+subtitle: Due May 23  @ 11:59PM
+date: today
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+engine: knitr
+knitr:
+  opts_chunk: 
+    fig.align: 'center'
+    # fig.width: 6
+    # fig.height: 4
+    message: FALSE
+    cache: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+```
+
+## Q1. ELMR Excercise 7.5 (p150) 
+(60pts, each 10pts)
+
+## Q2. Moments of exponential family distributions
+(20pts, each 10pts)
+
+Show that the exponential family distributions have moments 
+\begin{eqnarray*}
+  \mathbb{E}Y &=& \mu = b'(\theta) \\
+  \operatorname{Var}Y &=& \sigma^2 = b''(\theta) a(\phi).
+\end{eqnarray*}
+
+## Q3. Score and information matrix of GLM
+(20pts, each 10pts)
+
+Derive the gradient (score), negative Hessian, and Fisher information matrix (expected negative Hessian) of GLM.
+
+## Q4. ELMR Exercise 8.1 (p171)
+(25pts, each 5pts)
+
+## Q5. ELMR Exercise 8.4 (p172)
+(35pts, each 5pts)
+
+## Q6. ELMR Exercise 8.5 (p172)
+(90pts, each 10pts) 
