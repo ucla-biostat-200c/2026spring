@@ -230,7 +230,11 @@ $$
   \nabla \ell(\boldsymbol{\beta})
   = \sum_{i=1}^n \frac{(y_i - \mu_i) \mu_i'(\eta_i)}{\sigma_i^2} \mathbf{x}_i.
 $$
-For the canonical link, $\mu_i'(\eta_i)=d\mu_i/d\theta_i=\sigma_i^2/a(\phi)$, so this reduces to the canonical-link score derived above.
+For the canonical link, 
+$$
+\frac{d\mu_i}{d \eta_i} = \frac{d\mu_i}{d \theta_i} = \frac{d \, b'(\theta_i)}{d \theta_i} = b''(\theta_i) = \frac{\sigma_i^2}{a(\phi)},
+$$
+so this reduces to the canonical-link score derived above.
 
 - Differentiating the general-link score gives
 \begin{eqnarray*}
