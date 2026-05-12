@@ -1,0 +1,15 @@
+tidyverse
+ggplot2
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+lubridate
+faraway
+precrec
+Matrix
+lme4
+pbkrtest
