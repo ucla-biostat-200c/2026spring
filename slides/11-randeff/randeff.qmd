@@ -40,7 +40,9 @@ library(faraway)
 pulp <- as_tibble(pulp) %>%
   print(n = Inf)
 ```
+
 Graphical summary:
+
 ```{r}
 pulp %>%
   ggplot(mapping = aes(x = operator, y = bright)) + 
