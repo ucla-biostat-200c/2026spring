@@ -27,6 +27,7 @@ knitr::opts_chunk$set(fig.align = 'center', cache = TRUE)
 ```
 
 Display system information and load `tidyverse` and `faraway` packages
+
 ```{r}
 sessionInfo()
 library(tidyverse)
@@ -36,6 +37,7 @@ library(precrec)
 ```
 
 ## Additional reading materials
+
 - [Applied longitudinal analysis / Garrett M. Fitzmaurice, Nan M. Laird, James H. Ware.](https://search.library.ucla.edu/discovery/fulldisplay?docid=alma9967877733606533&context=L&vid=01UCS_LAL:UCLA&lang=en&search_scope=ArticlesBooksMore&adaptor=Local%20Search%20Engine&tab=Articles_books_more_slot&query=any,contains,Applied%20Longitudinal%20Analysis%20)
 
 - [Analysis of longitudinal data](https://search.library.ucla.edu/permalink/01UCS_LAL/17p22dp/alma9912401060406531)
@@ -115,6 +117,7 @@ summary(mmod)
 - Exercise: interpretation of fixed effects. 
 
 - To test the fixed effects, we can use the Kenward-Roger adjusted F-test. For example, to test the interaction term
+
 ```{r}
 library(pbkrtest)
 
@@ -125,12 +128,14 @@ KRmodcomp(mmod, mmodr)
 The interaction term is marginally significant. 
 
 - We can test the significance of the variance components by the parameteric bootstrap.
+
 ```{r}
 confint(mmod, method = "boot")
 ```
 All variance component parameters are significant except for the covariance (correlation) between random intercept and slope. 
 
 - QQ plots shows violation of normal assumption. It suggests other transformation of responses. 
+
 ```{r}
 (diagd <- fortify.merMod(mmod))
 diagd %>%
@@ -139,6 +144,7 @@ diagd %>%
 ```
 
 - Residuals vs fitted value plots.
+
 ```{r}
 diagd$edulevel <- cut(psid$educ, 
                       c(0, 8.5, 12.5, 20), 
@@ -197,7 +203,8 @@ nmod <- lmer(acuity ~ (1 | subject) + (1 | subject:eye), data = vision, REML = T
 KRmodcomp(mmod, nmod)
 ```
 
-- LRT.
+- LRT
+
 ```{r}
 mmod_mle <- lmer(acuity ~ power + (1 | subject) + (1 | subject:eye), data = vision, REML = FALSE)
 nmod_mle <- lmer(acuity ~ (1 | subject) + (1 | subject:eye), data = vision, REML = FALSE)

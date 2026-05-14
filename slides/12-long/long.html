@@ -2394,7 +2394,8 @@ window.Quarto = {
 </header>
 
 
-<p>Display system information and load <code>tidyverse</code> and <code>faraway</code> packages ::: {.cell layout-align=“center”}</p>
+<p>Display system information and load <code>tidyverse</code> and <code>faraway</code> packages</p>
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.4.1 (2024-06-14)
@@ -2439,7 +2440,7 @@ loaded via a namespace (and not attached):
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(faraway)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(precrec)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;precrec&quot;)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>:::</p>
+</div>
 <section id="additional-reading-materials" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="additional-reading-materials"><span class="header-section-number">1</span> Additional reading materials</h2>
 <ul>
@@ -2625,8 +2626,9 @@ cyear:sexM -0.003 -0.735  0.156 -0.010 -0.011</code></pre>
 </div>
 <ul>
 <li><p>Exercise: interpretation of fixed effects.</p></li>
-<li><p>To test the fixed effects, we can use the Kenward-Roger adjusted F-test. For example, to test the interaction term ::: {.cell layout-align=“center”}</p></li>
+<li><p>To test the fixed effects, we can use the Kenward-Roger adjusted F-test. For example, to test the interaction term</p></li>
 </ul>
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pbkrtest)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>mmod <span class="ot">&lt;-</span> <span class="fu">lmer</span>(<span class="fu">log</span>(income) <span class="sc">~</span> cyear <span class="sc">*</span> sex <span class="sc">+</span> age <span class="sc">+</span> educ <span class="sc">+</span> (cyear <span class="sc">|</span> person), <span class="at">data =</span> psid, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
@@ -2640,10 +2642,12 @@ Ftest  4.6142  1.0000 81.3279         1 0.03468 *
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
-<p>::: The interaction term is marginally significant.</p>
+</div>
+<p>The interaction term is marginally significant.</p>
 <ul>
-<li>We can test the significance of the variance components by the parameteric bootstrap. ::: {.cell layout-align=“center”}</li>
+<li>We can test the significance of the variance components by the parameteric bootstrap.</li>
 </ul>
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(mmod, <span class="at">method =</span> <span class="st">&quot;boot&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  2.5 %       97.5 %
@@ -2658,10 +2662,12 @@ age         -0.01472712  0.036694973
 educ         0.05881981  0.145919366
 cyear:sexM  -0.05260466 -0.001272029</code></pre>
 </div>
-<p>::: All variance component parameters are significant except for the covariance (correlation) between random intercept and slope.</p>
+</div>
+<p>All variance component parameters are significant except for the covariance (correlation) between random intercept and slope.</p>
 <ul>
-<li>QQ plots shows violation of normal assumption. It suggests other transformation of responses. ::: {.cell layout-align=“center”}</li>
+<li>QQ plots shows violation of normal assumption. It suggests other transformation of responses.</li>
 </ul>
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(diagd <span class="ot">&lt;-</span> <span class="fu">fortify.merMod</span>(mmod))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1,661 × 10
@@ -2689,10 +2695,11 @@ cyear:sexM  -0.05260466 -0.001272029</code></pre>
 </figure>
 </div>
 </div>
-<p>:::</p>
+</div>
 <ul>
-<li>Residuals vs fitted value plots. ::: {.cell layout-align=“center”}</li>
+<li>Residuals vs fitted value plots.</li>
 </ul>
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>diagd<span class="sc">$</span>edulevel <span class="ot">&lt;-</span> <span class="fu">cut</span>(psid<span class="sc">$</span>educ, </span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">8.5</span>, <span class="fl">12.5</span>, <span class="dv">20</span>), </span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels=</span><span class="fu">c</span>(<span class="st">&quot;lessHS&quot;</span>, <span class="st">&quot;HS&quot;</span>, <span class="st">&quot;moreHS&quot;</span>))</span>
@@ -2709,7 +2716,7 @@ cyear:sexM  -0.05260466 -0.001272029</code></pre>
 </figure>
 </div>
 </div>
-<p>:::</p>
+</div>
 </section>
 <section id="repeat-measures---vision-data" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="repeat-measures---vision-data"><span class="header-section-number">3</span> Repeat measures - <code>vision</code> data</h2>
@@ -2861,8 +2868,9 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 </div>
 </div>
 <ul>
-<li>LRT. ::: {.cell layout-align=“center”}</li>
+<li>LRT</li>
 </ul>
+<div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>mmod_mle <span class="ot">&lt;-</span> <span class="fu">lmer</span>(acuity <span class="sc">~</span> power <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> subject) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> subject<span class="sc">:</span>eye), <span class="at">data =</span> vision, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>nmod_mle <span class="ot">&lt;-</span> <span class="fu">lmer</span>(acuity <span class="sc">~</span> (<span class="dv">1</span> <span class="sc">|</span> subject) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> subject<span class="sc">:</span>eye), <span class="at">data =</span> vision, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>(lrtstat <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="dv">2</span> <span class="sc">*</span> (<span class="fu">logLik</span>(mmod_mle, <span class="at">REML =</span> <span class="cn">FALSE</span>) <span class="sc">-</span> <span class="fu">logLik</span>(nmod_mle, <span class="at">REML =</span> <span class="cn">FALSE</span>))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2873,7 +2881,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.04088862</code></pre>
 </div>
-<p>:::</p>
+</div>
 <ul>
 <li>Parametric bootstrap.</li>
 </ul>
