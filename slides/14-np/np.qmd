@@ -1,7 +1,7 @@
 ---
-title: "Nonparametric Regression (ELMR Chapter 14)"
+title: "Nonparametric Regression"
 author: "Dr. Jin Zhou @ UCLA"
-subtitle: Biostat 200C
+subtitle: "Biostat 200C: kernel smoothers, splines, and local regression"
 date: today
 format:
   html:
@@ -50,9 +50,9 @@ where $\epsilon_i$ are iid with mean zero and unknown variance $\sigma^2$.
 
 - **Nonparametric approach** assumes $f$ is from some smooth family of functions. 
 
-- Nonparametric approaches offers flexible modelling of complex data, and often serve as valuable exploratory data analysis tools to guide formulation of meaningful and effective parametric models.
+- Nonparametric approaches offer flexible modelling of complex data, and often serve as valuable exploratory data analysis tools to guide formulation of meaningful and effective parametric models.
 
-- Three datasets.
+- Three running examples.
 
 - `exa`: $f(x) = \sin^3 (2 \pi x^3)$. 
 ```{r}
@@ -152,22 +152,192 @@ with(exb, sm.regression(x, y, h = h.select(x, y)))
 
 - [A Conversation with Grace Wahba](https://projecteuclid.org/journals/statistical-science/volume-13/issue-1/A-conversation-with-David-Ruppert/10.1214/ss/1028905976.full)
 
-### Smoothing splines
+### Why Splines?
 
-- Smoothing spline approach chooses $\hat f$ to minize the modified least squares criterion
+- Kernel smoothers and local averaging are intuitive, but they can be hard to write as familiar regression models.
+
+- Splines keep the flexibility of nonparametric regression while using the familiar linear-model form
+$$
+\hat f(x) = \sum_{m=1}^M \hat\beta_m h_m(x).
+$$
+
+- Once the basis functions $h_m$ are chosen, estimation is ordinary least squares or penalized least squares.
+
+- Main teaching question: **where does smoothness come from?**
+
+### Piecewise Polynomials
+
+- Instead of using one polynomial over the whole range of $x$, fit different polynomials in regions separated by **knots**.
+
+- For example, a piecewise cubic polynomial with one knot at $c$ takes the form
+$$
+y_i =
+\begin{cases}
+\beta_{01} + \beta_{11}x_i + \beta_{21}x_i^2 + \beta_{31}x_i^3 + \epsilon_i, & x_i < c, \\
+\beta_{02} + \beta_{12}x_i + \beta_{22}x_i^2 + \beta_{32}x_i^3 + \epsilon_i, & x_i \geq c.
+\end{cases}
+$$
+
+- Without constraints, the fitted curve can jump or bend sharply at the knots.
+
+- Splines add continuity constraints. Cubic splines are continuous and have continuous first and second derivatives.
+
+<p align="center">
+![](ISL_fig_7_3.pdf){width=600px height=600px}
+</p>
+
+### Linear Splines
+
+- A **linear spline** with knots at $\xi_k$, $k = 1,\ldots,K$, is a piecewise linear function that is continuous at each knot.
+
+- A convenient basis is
+$$
+y_i = \beta_0 + \beta_1 x_i + \sum_{k=1}^K \beta_{k+1}(x_i-\xi_k)_+ + \epsilon_i,
+$$
+where
+$$
+(x_i-\xi_k)_+ =
+\begin{cases}
+x_i-\xi_k, & x_i > \xi_k, \\
+0, & \text{otherwise}.
+\end{cases}
+$$
+
+```{r}
+# right hockey stick function (RHS) with a knot at c
+rhs <- function(x, c) ifelse(x > c, x - c, 0)
+curve(rhs(x, 0.5), 0, 1)
+```
+
+- The basis functions look like "hinges"; each knot allows the slope to change after that point.
+
+```{r}
+(knots <- 0:9 / 10)
+dm <- outer(exa$x, knots, rhs)
+dim(dm)
+matplot(exa$x, dm, type = "l", col = 1, xlab = "x", ylab="")
+```
+
+### Regression Splines
+
+- A **regression spline** uses a relatively small set of knots, then estimates the basis coefficients by regression.
+
+- With fixed knots, spline fitting is just linear regression on the constructed basis functions.
+
+```{r}
+lmod <- lm(exa$y ~ dm)
+plot(y ~ x, exa, col = gray(0.75))
+lines(m ~ x, exa)
+lines(exa$x, predict(lmod), lty = 2)
+```
+
+- Better knot placement can improve the fit: use more knots where the function has more curvature.
+
+```{r}
+newknots <- c(0, 0.5, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)
+dmn <- outer(exa$x, newknots, rhs)
+lmod <- lm(exa$y ~ dmn)
+plot(y ~ x, data = exa, col = gray(0.75))
+lines(m ~ x, exa)
+lines(exa$x, predict(lmod), lty = 2)
+```
+
+### Cubic Splines and B-Splines
+
+- A **cubic spline** with knots at $\xi_k$, $k = 1,\ldots,K$, is a piecewise cubic polynomial with continuous derivatives up to order 2 at each knot.
+
+- One basis is the truncated power basis:
+$$
+1,\ x,\ x^2,\ x^3,\ (x-\xi_1)_+^3,\ldots,(x-\xi_K)_+^3.
+$$
+
+- The truncated power basis is conceptually simple, but can be numerically unstable. In practice, software usually uses **B-splines**, which are stable and locally supported.
+
+```{r}
+library(splines)
+
+matplot(bs(seq(0, 1, length = 1000), df = 12), type = "l", ylab="", col = 1)
+```
+
+```{r}
+# generate design matrix using B-splines with df = 12
+lmod <- lm(y ~ bs(x, df = 12), exa)
+plot(y ~ x, exa, col = gray(0.75))
+lines(m ~ x, exa) # true model
+lines(predict(lmod) ~ x, exa, lty = 2) # Cubic B-spline fit
+```
+
+### Natural Cubic Splines
+
+- Regular splines can have high variance near the boundary of the observed $x$ range.
+
+- A **natural cubic spline** is constrained to be linear beyond the boundary knots.
+
+- This reduces unstable tail behavior while allowing flexible curvature in the middle of the data.
+
+```{r}
+lmod_bs <- lm(y ~ bs(x, df = 12), exa)
+lmod_ns <- lm(y ~ ns(x, df = 12), exa)
+
+plot(y ~ x, exa, col = gray(0.75))
+lines(m ~ x, exa)
+lines(predict(lmod_bs) ~ x, exa, lty = 2)
+lines(predict(lmod_ns) ~ x, exa, lty = 5, lwd = 2)
+legend(
+  "topleft",
+  legend = c("truth", "B-spline", "natural spline"),
+  lty = c(1, 2, 5),
+  lwd = c(1, 1, 2),
+  bty = "n"
+)
+```
+
+- In practice, users often specify the degrees of freedom and let software choose knot number and placement.
+
+### Smoothing Splines
+
+- A smoothing spline chooses $\hat f$ to minimize the penalized least-squares criterion
 $$
 \frac 1n \sum_i [y_i - f(x_i)]^2 + \lambda \int [f''(x)]^2 \, dx,
 $$
-where $\lambda > 0$ is the smoothing paramter and $\int [f''(x)]^2 \, dx$ is a **roughness penalty**. For large $\lambda$, the minimizer $\hat f$ is smoother; for smaller $\lambda$, the minizer $\hat f$ is rougher. This is the **smoothing spline** fit.
+where $\lambda > 0$ is the **smoothing parameter** and $\int [f''(x)]^2 \, dx$ is a **roughness penalty**.
 
-- The minimizer takes a special form: $\hat f$ is a cubic spline (piecewise cubic polynomial in each interval $(x_i, x_{i+1})$). 
+- Large $\lambda$ gives a smoother curve; small $\lambda$ gives a more flexible curve.
 
-- The tuning parameter $\lambda$ is chosen by cross-validation (either leave-one-out (LOO) or generalized (GCV)) in R.
+- As $\lambda \to \infty$, the fit approaches a straight line. When $\lambda = 0$, the fit interpolates the data.
+
+- The minimizer is a natural cubic spline with knots at the unique observed $x_i$ values.
+
+### Effective Degrees of Freedom
+
+- The fitted values can be written as
+$$
+\hat{\mathbf f}_\lambda = S_\lambda \mathbf y,
+$$
+where $S_\lambda$ is the smoothing matrix.
+
+- The **effective degrees of freedom** are
+$$
+\mathrm{df}_\lambda = \sum_i S_{\lambda, ii}.
+$$
+
+- This lets software report or tune smoothing splines using `df`, even though the optimization is controlled by $\lambda$.
+
+- Leave-one-out cross-validation can be computed efficiently as
+$$
+\text{CV}(\lambda)
+= \sum_{i=1}^n
+\left[
+\frac{y_i - \hat f_\lambda(x_i)}{1 - S_{\lambda, ii}}
+\right]^2.
+$$
+
+### Smoothing Spline Examples
 
 ```{r}
 with(faithful, {
   plot(waiting ~ eruptions, col = gray(0.75))
-  lines(smooth.spline(eruptions, waiting), lty = 2)
+  lines(smooth.spline(eruptions, waiting), lty = 2, lwd = 2)
 })
 ```
 
@@ -175,7 +345,8 @@ with(faithful, {
 with(exa, {
   plot(y ~ x, col = gray(0.75))
   lines(x, m) # true model
-  lines(smooth.spline(x, y), lty = 2)
+  lines(smooth.spline(x, y, df = 16), lty = 2)
+  lines(smooth.spline(x, y, cv = TRUE), lty = 5, lwd = 2)
 })
 ```
 
@@ -186,72 +357,30 @@ with(exb, {
   lines(smooth.spline(x, y), lty = 2)
 })
 ```
-The last example `exb` shows that automatic choice of tuning parameter is not foolproof.
 
-### Regression splines
+- The `exb` example is useful pedagogically: automatic tuning is helpful, but it is not foolproof.
 
-- The **regresison spline** fit differs from the smoothing splines in that the number of knots can be much smaller than the sample size. 
+### Regression vs Smoothing Splines
 
-- Piecewise linear splines:
+- **Regression splines**: choose a smaller set of knots; fit by regression on spline basis functions.
 
-```{r}
-# right hockey stick function (RHS) with a knot at c
-rhs <- function(x, c) ifelse(x > c, x - c, 0)
-curve(rhs(x, 0.5), 0, 1)
-```
+- **Smoothing splines**: use knots at all unique observed $x_i$ values; control wiggliness with a penalty.
 
-- Define some knots for Example A
-```{r}
-(knots <- 0:9 / 10)
-```
-and compute a design matrix of splines with knots at these points for each $x$:
-```{r}
-# each column is a RHS function with a specific knot 
-dm <- outer(exa$x, knots, rhs)
-dim(dm)
-matplot(exa$x, dm, type = "l", col = 1, xlab = "x", ylab="")
-```
+- Same family of smooth functions, different strategy for controlling complexity.
 
-- Compute and dipslay the regression spline fit.
-```{r}
-lmod <- lm(exa$y ~ dm)
-plot(y ~ x, exa, col = gray(0.75))
-lines(exa$x, predict(lmod))
-```
+## Local Polynomial Regression
 
-- We can acheive better fit by using more knots in denser regions of greater curvature.
-```{r}
-newknots <- c(0, 0.5, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)
-dmn <- outer(exa$x, newknots, rhs)
-lmod <- lm(exa$y ~ dmn)
-plot(y ~ x, data = exa, col = gray(0.75))
-lines(exa$x, predict(lmod))
-```
-
-- High-order splines can produce a smoother fit. The `bs()` function can be used to generate the appropriate spline basis. The default is cubic B-splines.
-```{r}
-library(splines)
-
-matplot(bs(seq(0, 1, length = 1000), df = 12), type = "l", ylab="", col = 1)
-```
-
-```{r}
-# generate design matrix using B-splines with df = 12
-lmod <- lm(y ~ bs(x, 12), exa)
-plot(y ~ x, exa, col = gray(0.75))
-lines(m ~ x, exa) # true model
-lines(predict(lmod) ~ x, exa, lty = 2) # Cubic B-spline fit
-```
-
-## Local polynomials
+<p align="center">
+![](ISL_fig_7_9.pdf){width=600px height=600px}
+</p>
 
 - Both kernel and spline smoothers are vulnerable to outliers.
 
-- **Local polynomial** method fit a polynomial in a window using robust methods, then the predicted response at the middle of the window is the fitted value. This procedure is repeated by sliding the window over the range of the data. 
+- **Local polynomial** methods fit a polynomial in a moving window, then use the fitted value at the center of the window as the estimate. This procedure is repeated over the range of the data. 
 
 - **lowess** (locally weighted scatterplot smoothing) or **loess** (locally estimated scatterplot smoothing) functions in R.
 
-- We need to choose the order of polynomial and window width. Default window width is 0.75 of data. Default polynomial order is 2 (quadratic). 
+- We choose the polynomial order and window width. In R, `loess()` defaults to a quadratic local fit with span 0.75. 
 
 - Examples.
 
@@ -308,7 +437,21 @@ ggplot(data = exa, mapping = aes(x = x, y = y)) +
   geom_line(mapping = aes(x = x, y = m), linetype = 2)
 ```
 
-## Wavelets (**not covered in this course**)
+## Takeaways
+
+- Nonparametric regression trades a strict parametric form for a smoothness assumption.
+
+- Kernel methods average nearby observations; the bandwidth controls smoothness.
+
+- Regression splines use a small basis expansion and fit by ordinary regression.
+
+- Smoothing splines use many knots but penalize curvature; $\lambda$ or effective degrees of freedom controls smoothness.
+
+- Local polynomial regression fits simple models locally; the span controls how local the fit is.
+
+- In applied work, the most important habit is to vary the smoothness and check whether the substantive story changes.
+
+## Optional: Wavelets
 
 - In general, we approximate a curve by a family of basis functions
 $$
@@ -316,13 +459,13 @@ $$
 $$
 where the basis functions $\phi_i$ are given and the coefficients $c_i$ are estimated. 
 
-- Ideally we would like the basis functions $\phi_i$ to be (1) compactly supported (adatped to local data points) and (2) orthogonal (fast computing). 
+- Ideally we would like the basis functions $\phi_i$ to be compactly supported, so they adapt to local features, and orthogonal, so computation is fast. 
 
 - Orthogonal polynomials and Fourier basis are not compactly supported. 
 
 - Cubic B-splines are compactly supported but not orthogonal. 
 
-- **Wavelets** are both compactly supported and orthogonal. 
+- **Wavelets** can be both compactly supported and orthogonal. 
 
 - **Haar basis**. The mother wavelet function on [0, 1]
 $$
@@ -336,58 +479,3 @@ $$
 h_n(x) = 2^{j/2} w(2^j x - k),
 $$
 where $n = 2^j + k$ and $0 \le k \le 2^j$. 
-
-```{r}
-library(wavethresh)
-
-wds <- wd(exa$y, filter.number = 1, family = "DaubExPhase")
-draw(wds)
-plot(wds)
-```
-
-Let's only retain 3 levels of coefficients.
-```{r}
-wtd <- threshold(wds, policy = "manual", value = 9999)
-fd <- wr(wtd)
-plot(y ~ x, exa, col = gray(0.75))
-lines(m ~ x, exa)
-lines(fd ~ x, exa, lty = 5, lwd = 2)
-```
-
-Or we can zero out only the small coefficients.
-```{r}
-wtd2 <- threshold(wds)
-fd2 <- wr(wtd2)
-plot(y ~ x, exa, col = gray(0.75))
-lines(m ~ x, exa)
-lines(fd2 ~ x, exa, lty = 5, lwd = 2)
-```
-
-- We may perfer to use continuous wavelet basis functions.
-
-```{r}
-wds <- wd(exa$y, filter.number = 2, bc = "interval")
-draw(filter.number = 2, family = "DaubExPhase")
-plot(wds)
-```
-
-Now we zero out small coefficients.
-```{r}
-wtd <- threshold(wds)
-fd <- wr(wtd)
-plot(y ~ x, exa, col = gray(0.75))
-lines(m ~ x, exa)
-lines(fd ~ x, exa, lty=2)
-```
-
-- For the Old Faithful data.
-
-```{r}
-x <- with(faithful, (eruptions - min(eruptions)) / (max(eruptions) - min(eruptions)))
-gridof <- makegrid(x, faithful$waiting)
-wdof <- irregwd(gridof, bc="symmetric")
-wtof <- threshold(wdof)
-wrof <- wr(wtof)
-plot(waiting ~ eruptions, faithful, col = grey(0.75))
-with(faithful, lines(seq(min(eruptions), max(eruptions), len=512), wrof))
-```
