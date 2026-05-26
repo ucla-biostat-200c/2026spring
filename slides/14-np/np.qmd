@@ -150,7 +150,7 @@ with(exb, sm.regression(x, y, h = h.select(x, y)))
 
 ## Splines
 
-- [A Conversation with Grace Wahba](https://projecteuclid.org/journals/statistical-science/volume-13/issue-1/A-conversation-with-David-Ruppert/10.1214/ss/1028905976.full)
+- [A Conversation with Grace Wahba](https://projecteuclid.org/journals/statistical-science/volume-35/issue-2/A-Conversation-with-Grace-Wahba/10.1214/19-STS734.full)
 
 ### Why Splines?
 
