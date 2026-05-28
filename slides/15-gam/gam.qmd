@@ -315,11 +315,7 @@ Large $\lambda$ corresponds to small $\sigma_u^2$, so the wiggly coefficients ar
 
 Small $\lambda$ corresponds to large $\sigma_u^2$, so the wiggly coefficients can vary. The fitted curve can be more flexible.
 
-::: {.callout-important}
-## Important caveat
 
-This does not mean the smooth is literally a subject-specific random effect. It means the algebra is the same: a wiggliness penalty can be represented as a random-effect variance.
-:::
 
 ## Smoothing parameter selection: REML vs GCV
 
