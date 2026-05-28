@@ -477,11 +477,11 @@ summary(am_bigk)
 ```
 
 ```{r}
-k.check(am1)
+k.check(am_bigk)
 ```
 
 ```{r}
-gam.check(am1)
+gam.check(am_bigk)
 ```
 
 ### REML versus GCV in this example
