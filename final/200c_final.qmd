@@ -1,0 +1,176 @@
+---
+title: "Biostat 200C Final"
+subtitle: Due Fri. June 12, 2026 @ 11:59PM
+date: today
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+engine: knitr
+knitr:
+  opts_chunk: 
+    fig.align: 'center'
+    # fig.width: 6
+    # fig.height: 4
+    message: FALSE
+    cache: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+library(tidyverse)
+library(faraway)
+library(survival)
+library(ggfortify)
+library(MASS)
+library(lme4)
+library(geepack)
+```
+
+This is a take-home and an open book final. Helping or asking help from others is considered plagiarism. 
+
+
+
+## Q1 (25 pts). Longitudinal data analysis 
+
+Onychomycosis, popularly known as toenail fungus, is a fairly common condition that not only can disfigure and sometimes destroy the nail but that also can lead to social and self-image issues for sufferers. Tight-fitting shoes or hosiery, the sharing of common facilities such as showers and locker rooms, and toenail polish are all thought to be implicated in the development of onychomycosis. This question relates to data from a study conducted by researchers that recruited sufferers of a particular type of onychomycosis, dermatophyte onychomycosis. The study conducted by the researchers was focused on comparison of two oral medications, terbinafine (given as 250 mg/day, denoted as treatment 1 below) and itraconazole (given as 200 mg/day, denoted as treatment 2 below). 
+
+The trial was conducted as follows. 200 sufferers of advanced toenail dermatophyte onychomycosis in the big toe were recruited, and each saw a physician, who removed the afflicted nail. Each subject was then randomly assigned to treatment with either terbinafine (treatment 1) or itraconazole (treatment 2). Immediately prior to beginning treatment, the length of the unafflicted part of the toenail (which was hence not removed) was recorded (in millimeters). Then at 1 month, 2 months, 3 months, 6 months, and 12 months, each subject returned, and the length of the unafflicted part of the nail was measured again. A longer unafflicted nail length is a better outcome. Also recorded on each subject was gender and an indicator of the frequency with which the subject visited a gym or health club (and hence might use shared locker rooms and/or showers).
+
+The data are available in the file `toenail.txt` from [here](https://github.com/ucla-biostat-200c/2025spring/tree/master/hw/datasets). The data are presented in the form of one data record per observation; the columns of the data set are as follows:
+
+1. Subject id
+
+2. Health club frequency indicator (= 0 if once a week or less, = 1 if more than once a week)
+
+3. Gender indicator (= 0 if female, = 1 if male)
+
+4. Month
+
+5. Unafflicted nail length (the response, mm)
+
+6. Treatment indicator (= 1 if terbinafine, = 2 if itraconazole)
+
+The researchers had several questions, which they stated to you as follows:
+
+
+Use the linear mixed effect model (LMM) to answer: Is there a difference in the pattern of change of lengths of the unafflicted part of the nail between subjects receiving terbinafine and itraconazole over a 12 month period? Does one treatment show results more quickly?  
+    
+1. Plot the change of lengths of the unafflicted part of the nail over time and separated by treatment groups. Comment on overall patterns over time.
+
+2. Based on the pattern observed, pick appropriate time trend in the LMM and provide an algebraic definition for your chosen LMM, e.g., is the linear trend model adequate? or quadratic trend is needed? or any other pattern is more approriate? justify your answer. 
+    
+3. Model the covariance: fit both random intercept and random slope model and determine which one fits the data better. 
+
+
+In answering these scientific questions of interest, clearly write out the analytic models you consider for answering these questions (as detailed in the sub-questions). Clearly outline your decision making process for how you selected your final models. Fit your chosen final models and report to the project investigators on the stated scientific questions of interest.
+
+## Q2 (25 pts). GEE and GLMM
+
+The Skin Cancer Prevention Study, a randomized, double-blind, placebo-controlled clinical trial, was designed to test the effectiveness of beta-carotene in the prevention of non-melanoma skin cancer in high-risk subjects. A total of 1,683 subjects were randomized to either placebo or 50mg of beta-carotene per day and were followed for up to 5 years. Subjects were examined once per year and biopsied if a cancer was suspected to determine the number of new cancers per year. The outcome variable, $Y$, is a count of the number of new skin cancers per year. You may assume that the counts of new skin cancers, $Y$, are from exact one-year periods (so that no offset term is needed).
+
+Selected data from the study are in the dataset called `skin.txt` and is available [here](https://github.com/ucla-biostat-200c/2025spring/tree/master/hw/datasets). Each row of the dataset contains the following 9 variables: ID, Center, Age, Skin, Gender, Exposure, $Y$, Treatment, Year. These variables take values as follows:
+
+| Variable |  |
+| ----------------- | ------------------------- |
+|**ID**:            | Subject identifier number |
+|**Center**:        | Identifier number for center of enrollment|
+|**Age:**         | Subject’s age in years at randomization|
+|**Skin:**        |Skin type (1=burns; 0 otherwise) [evaluated at randomization and doesn’t change with time]|
+|**Gender:**      |1=male; 0=female| 
+|**Exposure:**    |Count of number of previous skin cancers [prior to randomization]|
+|**$Y$:**           |Count of number of new skin cancers in the Year of follow-up|
+|**Treatment:**   |1=beta-carotene; 0=placebo|
+|**Year:**        |Year of follow-up after starting randomized treatment|
+
+
+Your collaborator is interested in assessing the effect of treatment on the incidence of new 
+skin cancers over time. As the statistician on the project, provide an analysis of the data
+that addresses this question. Specifically, the investigator at Center=1 is interested in characterizing the distribution of risk among subjects at her center. In the following, only include the subset of subjects with Center=1 in the analysis.
+
+1. Provide an algebraic definition for a generalized linear marginal model (GEE) in which the only effects are for the intercept and Year (as a continuous variable). Fit this model and provide a table which includes the estimates of the parameters in your model.
+     
+2. Provide an algebraic definition for a generalized linear mixed model (GLMM) in which the only fixed effects are for the intercept and Year (as a continuous variable), and the only random effect is the intercept. What is being assumed about how the distribution of risk among subjects changes with time?
+     
+3. Fit your chosen GLMM and provide a table from your output which includes the estimates for the parameters in your GLMM, and provide careful interpretation of the Year term.
+     
+4. Are the estimates for the fixed intercept terms the same or different in the GLMM compared with the marginal model fitted in question (1)? Why are they the same or different?
+     
+5. Use the parameter estimates from your GLMM and your model definition to characterize the distribution of expected counts of new skin cancers among subjects at center 1 during their first year of follow-up.
+
+
+## Q3. (25 pts) LMM and GAMM
+
+This question is adapted from Exercise 11.2 of ELMR (p251). Read the documentation of the dataset `hprice` in Faraway package before working on this problem.
+
+1. Make a plot of the data on a single panel to show how housing prices increase by year. Describe what can be seen in the plot.
+
+2. Fit a linear model with the (log) house price as the response and all other variables (except msa) as fixed effect predictors. Which terms are statistically significant? Discuss the coefficient for time.
+
+3. Make a plot that shows how per-capita income changes over time. What is the nature of the increase? Make a similar plot to show how income growth changes over time. Comment on the plot.
+
+4. Create a new variable that is the per-capita income for the first time period for each MSA. Refit the same linear model but now using the initial income and not the income as it changes over time. Compare the two models.
+
+5. Fit a mixed effects model that has a random intercept for each MSA. Why might this be reasonable? The rest of the model should have the same structure as in the previous question. Make a numerical interpretation of the coefficient of time in your model. Explain the difference between REML and MLE methods.
+
+6. Fit a model that omits the adjacent to water and rent control predictors. Test whether this reduction in the model can be supported.
+
+7. It is possible that the increase in prices may not be linear in year. Fit an additive mixed model where smooth is added to year. Make a plot to show how prices have increased over time.
+
+8. Interpret the coefficients in the previous model for the initial annual income, growth and regulation predictors.
+
+## Optional Extra Credit Problem* 
+
+>> These two problems are meant to offer another chance to demonstrate understanding of some of the material on the mid-term. If you choose to do this problem and your score is higher than your mid-term grade, then your mid-term grade will be reweighted to be 
+>> `New Midterm Grade = .8*Old Midterm Grade + .2*Extra Credit Problem`
+
+###  
+
+The following table shows numbers of beetles dead after five hours exposure to gaseous carbon disulphide at various concentrations.
+
+```{r}
+(beetle <- tibble(dose = c(1.6907, 1.7242, 1.7552, 1.7842, 1.8113, 1.8369, 1.8610, 1.8839),
+                 beetles = c(59, 60, 62, 56, 63, 59, 62, 60),
+                 killed = c(6, 13, 18, 28, 52, 53, 61, 60)))
+```
+
+1. Let $x_i$ be `dose`, $n_i$ be the number of beetles, and $y_i$ be the number of killed. Plot the proportions $p_i = y_i/n_i$ plotted against dose $x_i$.
+
+2. We fit a logistic model to understand the relationship between dose and the probably of being killed. Write out the logistic model and associated log-likelihood function. 
+
+3. Derive the scores, $\mathbf{U}$, with respect to parameters in the above logistic model. (Hint there are two parameters)
+
+4. Derive the information matrix, $\mathcal{I}$ (Hint, a $2\times 2$ matrix)
+
+5. Maximum likelihood estimates are obtained by solving the iterative equation
+
+$$
+\mathcal{I}^{(m-1)}\mathbf{b}^{(m)} = \mathcal{I}^{(m-1)}\mathbf{b}^{(m-1)}+ \mathbf{U}^{(m-1)}
+$$
+where $\mathbf{b}$ is the vector of estimates. Starting with $\mathbf{b}^{(0)} = 0$, implement this algorithm to show successive iterations are 
+
+
+
+| Iterations      | $\beta_1$ | $\beta_2$| log-likelihood | 
+|-----------------|-----------|----------|----------------|
+|0 |       0 |       0| -333.404|
+|1 | -37.856 | 21.337 | -200.010|
+|2 | -53.853 | 30.384 | -187.274|
+|3 |         |        |         | 
+|4 |         |        |         | 
+|5 |         |        |         | 
+|6 | -60.717 | 34.270 | -186.235|
+
+
+- If after 6 steps, the model converged. For this final model, calculate the deviance. What is the distribution the deviance has? 
+
+- Does the model fit the data well? justify your answer. 
+
+### 
+
+Rework one of the following midterm questions: (2), (4), (6), (7), or (8). Choose the question you feel you understand the least.
