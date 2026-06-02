@@ -32,8 +32,7 @@ library(lme4)
 library(geepack)
 ```
 
-This is a take-home and an open book final. Helping or asking help from others is considered plagiarism. 
-
+This is a take-home, open-book final exam. Giving help to or receiving help from others will be considered plagiarism. If you use AI tools, please disclose which tool you used and how you used it, including the prompts you entered.
 
 
 ## Q1 (25 pts). Longitudinal data analysis 
